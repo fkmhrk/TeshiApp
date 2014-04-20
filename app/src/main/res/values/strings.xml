@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">TeshiApp</string>
+    <string name="button_upload_image">画像をアップロード</string>
+    <string name="toast_success_copy_to_clipboard">クリップボードにコピーしました</string>
+    <string name="toast_failed">失敗しました</string>
+
+</resources>
