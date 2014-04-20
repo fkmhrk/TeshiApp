@@ -3,7 +3,17 @@
 
     <string name="app_name">TeshiApp</string>
     <string name="button_upload_image">画像をアップロード</string>
+    <string name="button_matsuya">松屋コンバータ</string>
+
+    <!-- イメージアップローダー -->
     <string name="toast_success_copy_to_clipboard">クリップボードにコピーしました</string>
     <string name="toast_failed">失敗しました</string>
 
+    <!-- 松屋 -->
+    <string name="title_activity_matsuya">松屋コンバータ</string>
+    <string name="label_rate">現在のレートは 1松屋 = 290円 です。</string>
+    <string name="label_to_yen">松屋 → 円</string>
+    <string name="label_to_matsuya">円 → 松屋</string>
+    <string name="label_result_yen">約 %1$s円</string>
+    <string name="label_result_matsuya">約 %1$s松屋</string>
 </resources>

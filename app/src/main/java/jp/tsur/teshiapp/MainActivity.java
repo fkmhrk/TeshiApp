@@ -59,6 +59,12 @@ public class MainActivity extends Activity {
         startActivityForResult(intent, REQUEST_GALLERY);
     }
 
+    @OnClick(R.id.matsuya_button)
+    void onClickMatsuya() {
+        Intent intent = new Intent(this, MatsuyaActivity.class);
+        startActivity(intent);
+    }
+
     private class UploadTask extends AsyncTask<File, Void, String> {
         @Override
         protected String doInBackground(File... files) {
