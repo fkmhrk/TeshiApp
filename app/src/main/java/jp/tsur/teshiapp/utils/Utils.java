@@ -1,4 +1,4 @@
-package utils;
+package jp.tsur.teshiapp.utils;
 
 
 import android.content.ClipData;

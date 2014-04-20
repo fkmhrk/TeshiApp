@@ -19,7 +19,7 @@ import java.io.File;
 
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import utils.Utils;
+import jp.tsur.teshiapp.utils.Utils;
 
 
 public class MainActivity extends Activity {
