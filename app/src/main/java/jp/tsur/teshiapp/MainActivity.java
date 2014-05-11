@@ -2,23 +2,14 @@ package jp.tsur.teshiapp;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Bundle;
-
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.entity.mime.HttpMultipartMode;
-import org.apache.http.entity.mime.MultipartEntity;
-import org.apache.http.entity.mime.content.FileBody;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.util.EntityUtils;
 
 import java.io.File;
 
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import jp.tsur.teshiapp.app.MainApp;
+import jp.tsur.teshiapp.app.impl.MainAppImpl;
 import jp.tsur.teshiapp.utils.Utils;
 
 
@@ -26,10 +17,13 @@ public class MainActivity extends Activity {
 
     private static final int REQUEST_GALLERY = 1;
 
+    private MainApp mApp;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        this.mApp = new MainAppImpl();
         ButterKnife.inject(this);
     }
 
@@ -47,7 +41,18 @@ public class MainActivity extends Activity {
                     Utils.showToast(this, getString(R.string.toast_failed));
                     return;
                 }
-                new UploadTask().execute(file);
+                mApp.upload(file, getString(R.string.url_upload), new MainApp.UploadListener() {
+                    @Override
+                    public void onSuccess(String body) {
+                        Utils.copyToClipboard(MainActivity.this, body);
+                        Utils.showToast(MainActivity.this, getString(R.string.toast_success_copy_to_clipboard));
+                    }
+
+                    @Override
+                    public void onError(Exception e) {
+                        Utils.showToast(MainActivity.this, getString(R.string.toast_failed));
+                    }
+                });
                 break;
         }
     }
@@ -63,44 +68,5 @@ public class MainActivity extends Activity {
     void onClickMatsuya() {
         Intent intent = new Intent(this, MatsuyaActivity.class);
         startActivity(intent);
-    }
-
-    private class UploadTask extends AsyncTask<File, Void, String> {
-        @Override
-        protected String doInBackground(File... files) {
-            // ポスト先のURLを指定
-            HttpPost httpPost = new HttpPost(getString(R.string.url_upload));
-            MultipartEntity multipartEntity = new MultipartEntity(HttpMultipartMode.BROWSER_COMPATIBLE);
-
-            // ファイル名&パスを指定
-            FileBody fileBody = new FileBody(files[0]);
-
-            // KEYとファイルを指定
-            multipartEntity.addPart("imagedata", fileBody);
-            httpPost.setEntity(multipartEntity);
-
-            // レスポンス取得
-            HttpClient httpClient = new DefaultHttpClient();
-            httpPost.setEntity(multipartEntity);
-
-            try {
-                HttpResponse response = httpClient.execute(httpPost);
-                HttpEntity entity = response.getEntity();
-                return EntityUtils.toString(entity, "UTF-8");
-            } catch (Exception e) {
-                e.printStackTrace();
-                return null;
-            }
-        }
-
-        @Override
-        protected void onPostExecute(String str) {
-            if (str != null) {
-                Utils.copyToClipboard(MainActivity.this, str);
-                Utils.showToast(MainActivity.this, getString(R.string.toast_success_copy_to_clipboard));
-            } else {
-                Utils.showToast(MainActivity.this, getString(R.string.toast_failed));
-            }
-        }
     }
 }
