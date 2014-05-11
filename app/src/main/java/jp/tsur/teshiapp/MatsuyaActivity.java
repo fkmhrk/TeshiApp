@@ -10,20 +10,23 @@ import android.widget.TextView;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import butterknife.OnClick;
+import jp.tsur.teshiapp.app.MatsuyaApp;
+import jp.tsur.teshiapp.app.impl.MatsuyaAppImpl;
 
 public class MatsuyaActivity extends Activity {
-
-    private static final int RATE_MATSUYA = 290;
 
     @InjectView(R.id.edit_text)
     EditText mEditText;
     @InjectView(R.id.result_label)
     TextView mResultLabel;
 
+    private MatsuyaApp mApp;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_matsuya);
+        this.mApp = new MatsuyaAppImpl();
         ButterKnife.inject(this);
 
         ActionBar actionBar = getActionBar();
@@ -36,7 +39,7 @@ public class MatsuyaActivity extends Activity {
     void toYen() {
         assert mEditText.getText() != null;
         int matsuya = Integer.parseInt(mEditText.getText().toString());
-        int yen = matsuya * RATE_MATSUYA;
+        int yen = mApp.toYen(matsuya);
         mResultLabel.setText(getString(R.string.label_result_yen, String.format("%1$,3d", yen)));
     }
 
@@ -44,7 +47,7 @@ public class MatsuyaActivity extends Activity {
     void toMaysuya() {
         assert mEditText.getText() != null;
         int yen = Integer.parseInt(mEditText.getText().toString());
-        double matsuya = (double) yen / RATE_MATSUYA;
+        double matsuya = mApp.toMatsuya(yen);
         mResultLabel.setText(getString(R.string.label_result_matsuya, String.format("%1$,3f", matsuya)));
     }
 
@@ -57,5 +60,4 @@ public class MatsuyaActivity extends Activity {
         }
         return super.onOptionsItemSelected(item);
     }
-
 }
